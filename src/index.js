@@ -2,11 +2,10 @@ const puppeteer = require('puppeteer');
 const notifier = require('node-notifier');
 
 const { getCookie, setCookie } = require('./utils/cookie');
+const { getState } = require('./core/api');
 
+const usedRules = [1, 2, 9, 1002, 1003];
 class App {
-  constructor() {
-    this.openLogin = this.openLogin.bind(this);
-  }
   async init() {
     const [width, height] = [800, 600];
     this.browser = await puppeteer.launch({
@@ -17,11 +16,17 @@ class App {
 
     await this.addCookies(getCookie());
     await this.page.setViewport({ width, height });
+    await this.page.setRequestInterception(true);
+    this.page.on('request', request => {
+      if (request.resourceType() === 'image') request.abort();
+      else request.continue();
+    });
   }
 
   async start() {
     await this.init();
     await this.openLogin();
+    await this.getWork();
   }
 
   async openLogin() {
@@ -46,7 +51,7 @@ class App {
       console.log('success login.');
       if (isExpired) {
         await this.saveCookies();
-        console.log('save succeed');
+        console.log('save login state succeed');
       }
     }
   }
@@ -61,10 +66,18 @@ class App {
     const cookies = cookies_str.split(';').map(pair => {
       const name = pair.trim().slice(0, pair.trim().indexOf('='));
       const value = pair.trim().slice(pair.trim().indexOf('=') + 1);
-      return { name, value, domain: 'pc.xuexi.cn' };
+      return { name, value, domain: '.xuexi.cn' };
     });
     await this.page.setCookie(...cookies);
   }
+
+  async getWork() {
+    const result = await getState();
+    const used = result.data.filter(item => usedRules.includes(item.ruleId));
+    console.log(used);
+  }
+
+  async readArticle() {}
 
   log(str) {
     notifier.notify({
