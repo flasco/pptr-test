@@ -4,7 +4,7 @@ const Login = require('./core/login');
 const Work = require('./core/work');
 const Article = require('./core/article');
 
-const { getCookie } = require('./utils/cookie');
+const Cookie = require('./store/cookie');
 
 class App {
   async init() {
@@ -21,7 +21,7 @@ class App {
     });
     const page = await browser.newPage();
 
-    await this.addCookies(getCookie(), page);
+    await this.addCookies(Cookie.getCookie(), page);
     await page.setViewport({ width, height });
 
     await page.setRequestInterception(true);

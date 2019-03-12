@@ -1,6 +1,6 @@
 const notifier = require('node-notifier');
 
-const { setCookie } = require('../../utils/cookie');
+const Cookie = require('../../store/cookie');
 
 class Base {
   constructor(browser, page) {
@@ -10,7 +10,7 @@ class Base {
 
   async saveCookies() {
     const cookies = await this.page.evaluate(() => document.cookie);
-    setCookie(cookies);
+    Cookie.setCookie(cookies);
   }
 
   log(str) {
