@@ -262,10 +262,10 @@ proxy-from-env@^1.0.0:
   resolved "http://registry.npm.taobao.org/proxy-from-env/download/proxy-from-env-1.0.0.tgz#33c50398f70ea7eb96d21f7b817630a55791c7ee"
   integrity sha1-M8UDmPcOp+uW0h97gXYwpVeRx+4=
 
-puppeteer@^1.13.0:
+puppeteer-core@^1.13.0:
   version "1.13.0"
-  resolved "http://registry.npm.taobao.org/puppeteer/download/puppeteer-1.13.0.tgz#187ccf5ed5caf08ed1291b262d033cc364bf88ab"
-  integrity sha1-GHzPXtXK8I7RKRsmLQM8w2S/iKs=
+  resolved "http://registry.npm.taobao.org/puppeteer-core/download/puppeteer-core-1.13.0.tgz#f8001851e924e6e9ef6e9fae1778c3ab87c3f307"
+  integrity sha1-+AAYUekk5unvbp+uF3jDq4fD8wc=
   dependencies:
     debug "^4.1.0"
     extract-zip "^1.6.6"

@@ -27,6 +27,14 @@ async function fetch20News() {
   return list.slice(0, 20);
 }
 
+async function fetch20Vedios() {
+  const url = 'https://www.xuexi.cn/4426aa87b0b64ac671c96379a3a8bd26/datadb086044562a57b441c24f2af1c8e101.js';
+  const { data } = await axios.get(url); // fp2t40yxso9xk0028 
+  const obj = data.substr(14).substr(0, data.length - 15);
+  const list = JSON.parse(obj)['fp2t40yxso9xk0010']; // 还有list2, 3, 4
+  return [...list.list1, ...list.list2];
+}
+
 async function getState() {
   const { data } = await axios.get(
     'https://pc-api.xuexi.cn/open/api/score/today/queryrate'
@@ -36,3 +44,4 @@ async function getState() {
 
 exports.getState = getState;
 exports.fetch20News = fetch20News;
+exports.fetch20Vedios = fetch20Vedios;

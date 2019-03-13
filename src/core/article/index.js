@@ -1,6 +1,6 @@
 const Base = require('../base');
 
-const { hasArticleId, pushArticleId } = require('../../store/article');
+const articleStore = require('../../store/article');
 
 const { fetch20News } = require('../../api');
 class Article extends Base {
@@ -11,7 +11,7 @@ class Article extends Base {
   async start({ sum, time }, isHotTime) {
     if (isHotTime) {
       this.sum = ((sum + 1) / 2) >>> 0; // 阅读数
-      this.time = ((time + 1) / 2) >>> (0 * 4); // 所需要的分钟数
+      this.time = (((time + 1) / 2) >>> 0) * 4; // 所需要的分钟数
     } else {
       this.time = time * 4;
       this.sum = sum;
@@ -34,7 +34,7 @@ class Article extends Base {
       await this.autoScroll(this.page);
       await this.page.waitFor(700);
       await this.autoScroll(this.page, true);
-      const time = 1000 * 61 * this.time / j >>> 0;
+      const time = ((1000 * 61 * this.time) / j) >>> 0;
       console.log(`读完第 ${i + 1} 篇, wait ${time} sec.`);
       await this.page.waitFor(time);
     }
@@ -51,8 +51,8 @@ class Article extends Base {
     list.reverse();
     for (let i = 0, j = list.length; i < j && this.readArr.length < sum; i++) {
       const { id, url } = list[i];
-      if (!hasArticleId(id)) {
-        pushArticleId(id);
+      if (!articleStore.hasArticleId(id)) {
+        articleStore.pushArticleId(id);
         this.readArr.push(url);
       }
     }
