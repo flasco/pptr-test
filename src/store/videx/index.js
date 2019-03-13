@@ -2,16 +2,16 @@ const Base = require('../base');
 
 class Videx extends Base {
   constructor() {
-    super('videx', new Map());
+    super('videx', {});
   }
   hasVidexId(key) {
-    const map = this.getStore();
-    return map.has(key);
+    const map = this.store;
+    return map[key] != null;
   }
 
   pushVidexId(key) {
-    const map = this.getStore();
-    map.set(key, 1);
+    const map = this.store;
+    map[key] = 1;
     return this.setStore(map);
   }
 }

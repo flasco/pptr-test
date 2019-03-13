@@ -1,3 +1,5 @@
+const formatDate = require('date-fns/format');
+
 const Base = require('../base');
 
 const ViStore = require('../../store/videx');
@@ -21,14 +23,14 @@ class Videx extends Base {
     if (this.sum < 1 && this.time < 1) return;
     console.log(`需要查看 ${this.sum} 个视频，花费 ${this.time} 分钟.`);
 
-    // await this.getVidexByNews();
-    this.watchArr.push(
-      'https://www.xuexi.cn/45567be569610decf8db1e9eae5f7b6c/cf94877c29e1c685574e0226618fb1be.html'
-    );
-    await this.watchVidex();
-    // if (this.watchArr.length >= this.sum) {
-    //   console.log('已获取足够的视频link，开始watch...');
-    // }
+    await this.getVidexByNews();
+
+    if (this.watchArr.length >= this.sum) {
+      console.log('已获取足够的视频link，开始watch...');
+      await this.watchVidex();
+    } else {
+      console.log('视频 link 不够...');
+    }
   }
 
   async watchVidex() {
@@ -89,12 +91,18 @@ class Videx extends Base {
     });
     for (let i = 0, j = listx.length; i < j; i++) {
       const cur = listx[i];
-      if (!ViStore.hasVidexId(cur.id)) {
+      if (!ViStore.hasVidexId(cur.id) && !cur.id.includes('新闻联播')) {
         this.watchArr.push(cur.url);
         ViStore.pushVidexId(cur.id);
         if (this.watchArr.length >= this.sum - 1) break;
       }
     }
+
+    const xwlbLink =
+      'https://www.xuexi.cn/8e35a343fca20ee32c79d67e35dfca90/7f9f27c65e84e71e1b7189b7132b4710.html';
+    const before = formatDate(Date.now() - 24 * 3600000 * 7, 'YYYY-MM-DD');
+    const get7daysBefore = `${xwlbLink}?p1=${before}`;
+    this.watchArr.push(get7daysBefore);
   }
 }
 

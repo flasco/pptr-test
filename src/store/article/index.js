@@ -2,21 +2,20 @@ const Base = require('../base');
 
 class Article extends Base {
   constructor() {
-    super('article', new Map());
+    super('article', {});
   }
   hasArticleId(key) {
-    const map = this.getStore();
-    return map.has(key);
+    const map = this.store;
+    return map[key] != null;
   }
 
   pushArticleId(key) {
-    const map = this.getStore();
-    map.set(key, 1);
+    const map = this.store;
+    map[key] = 1;
     return this.setStore(map);
   }
 }
 
 const article = new Article();
 
-exports.hasArticleId = article.hasArticleId;
-exports.pushArticleId = article.pushArticleId;
+module.exports = article;

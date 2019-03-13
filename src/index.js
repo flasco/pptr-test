@@ -59,8 +59,9 @@ class App {
     await this.login.startLogin();
     const { article, video } = await this.work.getWork();
     const isHotTime = this.work.isHOTTIME();
+    !isHotTime && console.log('现在不是双倍时间，建议双倍时间再看');
+    await this.article.start(article, isHotTime);
     await this.videx.start(video, isHotTime);
-    // await this.article.start(article, isHotTime);
   }
 }
 

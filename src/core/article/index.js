@@ -35,7 +35,7 @@ class Article extends Base {
       await this.page.waitFor(700);
       await this.autoScroll(this.page, true);
       const time = ((1000 * 61 * this.time) / j) >>> 0;
-      console.log(`读完第 ${i + 1} 篇, wait ${time} sec.`);
+      console.log(`读完第 ${i + 1} 篇, wait ${time / 1000 >>> 0} sec.`);
       await this.page.waitFor(time);
     }
   }
@@ -49,7 +49,7 @@ class Article extends Base {
       };
     });
     list.reverse();
-    for (let i = 0, j = list.length; i < j && this.readArr.length < sum; i++) {
+    for (let i = 0, j = list.length; i < j && this.readArr.length < this.sum; i++) {
       const { id, url } = list[i];
       if (!articleStore.hasArticleId(id)) {
         articleStore.pushArticleId(id);
