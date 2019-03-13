@@ -21,9 +21,10 @@ class App {
         // 下面 2 个是为了允许自动播放
         '--autoplay-policy',
         '--no-user-gesture-required',
-        '--disable-web-security', // 允许视频下载
+        '--disable-web-security' // 允许视频下载
       ],
-      executablePath:'/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
+      executablePath:
+        '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
     });
     const page = await browser.newPage();
     await page.setBypassCSP(true);
@@ -34,7 +35,11 @@ class App {
     await page.setRequestInterception(true);
     page.on('request', request => {
       const url = request.url();
-      if (url.endsWith('.jpg') && !url.includes('prismplayer')) request.abort();
+      if (
+        (url.endsWith('.jpg') || url.endsWith('.png')) &&
+        !url.includes('prismplayer')
+      )
+        request.abort();
       else request.continue();
     });
 
