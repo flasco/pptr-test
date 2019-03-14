@@ -58,7 +58,7 @@ class Videx extends Base {
           window.requestAnimationFrame(step);
         }
         const el = document.querySelectorAll('.prism-player')[0];
-        animateScroll(el, 6);
+        if (el != null) animateScroll(el, 6);
       });
 
       const time = await this.page.evaluate(() => {
@@ -79,6 +79,7 @@ class Videx extends Base {
 
       await this.page.waitFor(duration * 1000);
     }
+    ViStore.save();
   }
 
   async getVidexByNews() {

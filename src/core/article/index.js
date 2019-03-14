@@ -38,6 +38,7 @@ class Article extends Base {
       console.log(`读完第 ${i + 1} 篇, wait ${time / 1000 >>> 0} sec.`);
       await this.page.waitFor(time);
     }
+    articleStore.save();
   }
 
   async getArticleByNews() {

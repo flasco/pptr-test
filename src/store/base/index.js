@@ -21,7 +21,10 @@ class Store {
 
   setStore(store) {
     this.store = store;
-    writeFileSync(this.storePath, store);
+  }
+
+  save() {
+    writeFileSync(this.storePath, this.store);
   }
 }
 

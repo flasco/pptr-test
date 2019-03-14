@@ -10,7 +10,8 @@ class Cookie extends Base {
 
   setCookie(str) {
     this.store.str = str;
-    return this.setStore(this.store);
+    this.setStore(this.store);
+    this.save();
   }
 }
 
