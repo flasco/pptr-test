@@ -73,7 +73,7 @@ class Article extends Base {
                 clearInterval(timer);
                 resolve();
               }
-            }, 650)
+            }, 100)
           : setInterval(() => {
               window.scrollBy(0, distance);
               totalHeight += distance;
@@ -81,7 +81,7 @@ class Article extends Base {
                 clearInterval(timer);
                 resolve();
               }
-            }, 650);
+            }, 100);
       });
     }, isUp);
   }

@@ -20,8 +20,7 @@ class App {
         '--no-sandbox',
         // 下面 2 个是为了允许自动播放
         '--autoplay-policy',
-        '--no-user-gesture-required',
-        '--disable-web-security' // 允许视频下载
+        '--no-user-gesture-required'
       ],
       executablePath:
         '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
@@ -39,7 +38,7 @@ class App {
         (url.endsWith('.jpg') || url.endsWith('.png')) &&
         !url.includes('prismplayer')
       )
-        request.abort();
+      request.abort();
       else request.continue();
     });
 
@@ -67,7 +66,7 @@ class App {
     !isHotTime && console.log('现在不是双倍时间，建议双倍时间再打开');
     await this.article.start(article, isHotTime);
     await this.videx.start(video, isHotTime);
-    this.log('finish!');
+    this.article.log('finish!');
     process.exit(0);
   }
 }
