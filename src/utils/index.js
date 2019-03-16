@@ -1,17 +1,32 @@
 const fs = require('fs');
+const { platform } = require('os');
+const isWin = platform().startsWith("win");
 
 function isExist(filePath) {
   return fs.existsSync(filePath);
 }
 
 function checkDirExist(folderpath) {
-  const pathArr = folderpath.split('/');
-  let _path = '';
-  for (let i = 0; i < pathArr.length; i++) {
-    if (pathArr[i]) {
-      _path += `/${pathArr[i]}`;
-      if (!fs.existsSync(_path)) {
-        fs.mkdirSync(_path);
+  if (isWin) {
+    const pathArr = folderpath.split('\\');
+    let _path = '';
+    for (let i = 0; i < pathArr.length; i++) {
+      if (pathArr[i]) {
+        _path += (isWin && i === 0 ? '' : '\\') + pathArr[i];
+        if (!fs.existsSync(_path)) {
+          fs.mkdirSync(_path);
+        }
+      }
+    }
+  } else {
+    const pathArr = folderpath.split('/');
+    let _path = '';
+    for (let i = 0; i < pathArr.length; i++) {
+      if (pathArr[i]) {
+        _path += `/${pathArr[i]}`;
+        if (!fs.existsSync(_path)) {
+          fs.mkdirSync(_path);
+        }
       }
     }
   }

@@ -23,7 +23,8 @@ class App {
         '--no-user-gesture-required'
       ],
       executablePath:
-        '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+        // '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+        `C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe`
     });
     const page = await browser.newPage();
     await page.setBypassCSP(true);
