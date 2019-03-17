@@ -27,7 +27,6 @@ class App {
         `C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe`
     });
     const page = await browser.newPage();
-    await page.setBypassCSP(true);
 
     await this.addCookies(Cookie.getCookie(), page);
     await page.setViewport({ width, height });

@@ -30,8 +30,10 @@ async function fetch20News() {
 async function fetch20Vedios() {
   const url = 'https://www.xuexi.cn/4426aa87b0b64ac671c96379a3a8bd26/datadb086044562a57b441c24f2af1c8e101.js';
   const { data } = await axios.get(url); // fp2t40yxso9xk0028 
-  const obj = data.substr(14).substr(0, data.length - 15);
-  const list = JSON.parse(obj)['fp2t40yxso9xk0010']; // 还有list2, 3, 4
+  const pos1 = data.indexOf('fp2t40yxso9xk0010');
+  const pos2 = data.indexOf('fp2t40yxso9xk0013');
+  const objstr = data.substr(pos1 + 19, pos2 - pos1 - 21)
+  const list = JSON.parse(objstr); // 还有list2, 3, 4
   return [...list.list1, ...list.list2];
 }
 
