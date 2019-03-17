@@ -90,20 +90,27 @@ class Videx extends Base {
         url: item.static_page_url
       };
     });
+
+    const needTime = this.time > 1;
+
+    const lengthx = needTime ? this.sum - 1 : this.sum;
+
     for (let i = 0, j = listx.length; i < j; i++) {
       const cur = listx[i];
       if (!ViStore.hasVidexId(cur.id) && !cur.id.includes('新闻联播')) {
         this.watchArr.push(cur.url);
         ViStore.pushVidexId(cur.id);
-        if (this.watchArr.length >= this.sum - 1) break;
+        if (this.watchArr.length >= lengthx) break;
       }
     }
 
-    const xwlbLink =
-      'https://www.xuexi.cn/8e35a343fca20ee32c79d67e35dfca90/7f9f27c65e84e71e1b7189b7132b4710.html';
-    const before = formatDate(Date.now() - 24 * 3600000 * 7, 'YYYY-MM-DD');
-    const get7daysBefore = `${xwlbLink}?p1=${before}`;
-    this.watchArr.push(get7daysBefore);
+    if (needTime) {
+      const xwlbLink =
+        'https://www.xuexi.cn/8e35a343fca20ee32c79d67e35dfca90/7f9f27c65e84e71e1b7189b7132b4710.html';
+      const before = formatDate(Date.now() - 24 * 3600000 * 7, 'YYYY-MM-DD');
+      const get7daysBefore = `${xwlbLink}?p1=${before}`;
+      this.watchArr.push(get7daysBefore);
+    }
   }
 }
 
