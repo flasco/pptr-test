@@ -5,11 +5,15 @@ const Work = require('./core/work');
 const Article = require('./core/article');
 const Videx = require('./core/videx');
 
+const findChrome = require('./utils/find-chrome');
+
 const Cookie = require('./store/cookie');
 
 class App {
   async init() {
     const [width, height] = [800, 600];
+
+    const { executablePath } = await findChrome()
     const browser = await puppeteer.launch({
       headless: false,
       args: [
@@ -22,9 +26,7 @@ class App {
         '--autoplay-policy',
         '--no-user-gesture-required'
       ],
-      executablePath:
-        // '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-        `C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe`
+      executablePath
     });
     const page = await browser.newPage();
 

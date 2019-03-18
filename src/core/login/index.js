@@ -22,7 +22,7 @@ class Login extends Base {
 
       await this.page.goto(loginUrl);
       this.log('请扫描登录二维码');
-      await this.page.waitForNavigation(0);
+      await this.page.waitForNavigation({ timeout: 0 });
     }
 
     const curUrl = await this.page.evaluate(() => location.href);
