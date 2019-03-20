@@ -4,10 +4,6 @@ const articleStore = require('../../store/article');
 
 const { fetch20News } = require('../../api');
 class Article extends Base {
-  constructor(...props) {
-    super(...props);
-    this.readArr = [];
-  }
   async start({ sum, time }, isHotTime) {
     if (isHotTime) {
       this.sum = ((sum + 1) / 2) >>> 0; // 阅读数
@@ -19,6 +15,8 @@ class Article extends Base {
 
     if (this.sum < 1 && this.time < 1) return;
     console.log(`需要查看 ${this.sum} 篇文章，花费 ${this.time} 分钟.`);
+
+    this.readArr = [];
 
     await this.getArticleByNews();
     if (this.readArr.length >= this.sum) {

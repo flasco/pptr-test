@@ -7,10 +7,6 @@ const ViStore = require('../../store/videx');
 const { fetch20Vedios } = require('../../api');
 
 class Videx extends Base {
-  constructor(...props) {
-    super(...props);
-    this.watchArr = [];
-  }
   async start({ sum, time }, isHotTime) {
     if (isHotTime) {
       this.sum = ((sum + 1) / 2) >>> 0; // 观看数
@@ -22,6 +18,8 @@ class Videx extends Base {
 
     if (this.sum < 1 && this.time < 1) return;
     console.log(`需要查看 ${this.sum} 个视频，花费 ${this.time} 分钟.`);
+
+    this.watchArr = [];
 
     await this.getVidexByNews();
 
