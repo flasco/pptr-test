@@ -71,7 +71,10 @@ class App {
         break;
       }
       const { article, video } = await this.work.getWork();
-      if (article.sum + article.time + video.sum + video.time < 1) break;
+      if (article.sum + article.time + video.sum + video.time < 1) {
+        this.article.log('finish!');
+        break;
+      }
       const isHotTime = this.work.isHOTTIME();
       !isHotTime && console.log('现在不是双倍时间，建议双倍时间再打开');
       if (article.sum > 0 || article.time > 0)
@@ -80,7 +83,6 @@ class App {
         await this.videx.start(video, isHotTime);
     }
 
-    this.article.log('finish!');
     process.exit(0);
   }
 }
