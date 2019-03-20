@@ -95,12 +95,14 @@ class Videx extends Base {
 
     const lengthx = needTime ? this.sum - 1 : this.sum;
 
-    for (let i = 0, j = listx.length; i < j; i++) {
-      const cur = listx[i];
-      if (!ViStore.hasVidexId(cur.id) && !cur.id.includes('新闻联播')) {
-        this.watchArr.push(cur.url);
-        ViStore.pushVidexId(cur.id);
-        if (this.watchArr.length >= lengthx) break;
+    if (lengthx > 0) {
+      for (let i = 0, j = listx.length; i < j; i++) {
+        const cur = listx[i];
+        if (!ViStore.hasVidexId(cur.id) && !cur.id.includes('新闻联播')) {
+          this.watchArr.push(cur.url);
+          ViStore.pushVidexId(cur.id);
+          if (this.watchArr.length >= lengthx) break;
+        }
       }
     }
 
