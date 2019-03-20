@@ -33,8 +33,13 @@ async function fetch20Vedios() {
   const pos1 = data.indexOf('fp2t40yxso9xk0010');
   const pos2 = data.indexOf('fp2t40yxso9xk0013');
   const objstr = data.substr(pos1 + 19, pos2 - pos1 - 21)
-  const list = JSON.parse(objstr); // 还有list2, 3, 4
-  return [...list.list1, ...list.list2];
+  try {
+    const list = JSON.parse(objstr); // 还有list2, 3, 4
+    return [...list.list1, ...list.list2];
+  } catch(error) {
+    console.log(objstr.substr(0, 20));
+    console.log(objstr.substr(objstr.length - 20, 20));
+  }
 }
 
 async function getState() {

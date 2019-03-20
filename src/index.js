@@ -13,7 +13,7 @@ class App {
   async init() {
     const [width, height] = [800, 600];
 
-    const { executablePath } = await findChrome()
+    const { executablePath } = await findChrome();
     const browser = await puppeteer.launch({
       headless: false,
       args: [
@@ -40,7 +40,7 @@ class App {
         (url.endsWith('.jpg') || url.endsWith('.png')) &&
         !url.includes('prismplayer')
       )
-      request.abort();
+        request.abort();
       else request.continue();
     });
 
@@ -63,11 +63,23 @@ class App {
   async start() {
     await this.init();
     await this.login.startLogin();
-    const { article, video } = await this.work.getWork();
-    const isHotTime = this.work.isHOTTIME();
-    !isHotTime && console.log('现在不是双倍时间，建议双倍时间再打开');
-    await this.article.start(article, isHotTime);
-    await this.videx.start(video, isHotTime);
+    let triedCnt = 0;
+    while (1) {
+      triedCnt++;
+      if (triedCnt > 3) {
+        this.article.log('error, tried cnt too much');
+        break;
+      }
+      const { article, video } = await this.work.getWork();
+      if (article.sum + article.time + video.sum + video.time < 1) break;
+      const isHotTime = this.work.isHOTTIME();
+      !isHotTime && console.log('现在不是双倍时间，建议双倍时间再打开');
+      if (article.sum > 0 || article.time > 0)
+        await this.article.start(article, isHotTime);
+      if (video.sum > 0 || video.time > 0)
+        await this.videx.start(video, isHotTime);
+    }
+
     this.article.log('finish!');
     process.exit(0);
   }

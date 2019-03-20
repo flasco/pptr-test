@@ -38,6 +38,10 @@ class Videx extends Base {
       const current = this.watchArr[i];
       await this.page.goto(current);
 
+      const haveVideo = await this.page.evaluate(() => document.querySelectorAll('.prism-player').length > 0);
+
+      if (!haveVideo) continue;
+
       await this.page.evaluate(() => {
         function animateScroll(element, speed) {
           let rect = element.getBoundingClientRect();
@@ -66,6 +70,12 @@ class Videx extends Base {
         return el.textContent;
       });
 
+      await this.page.evaluate(() => {
+        // 如果不在自动播放，就点一下
+        const el = document.querySelectorAll('.prism-big-play-btn')[0];
+        if (el.style.display === 'block') el.click();
+      })
+
       console.log(`第 ${i + 1} 个, druation - ${time}.`);
 
       const timeArr = time.split(':');
@@ -77,7 +87,7 @@ class Videx extends Base {
         duration = +timeArr[0] * 3600 + +timeArr[1] * 60 + +timeArr[2];
       }
 
-      await this.page.waitFor(duration * 1000);
+      await this.page.waitFor(duration * 1001);
     }
     ViStore.save();
   }
