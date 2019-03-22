@@ -39,6 +39,7 @@ async function fetch20Vedios() {
   } catch(error) {
     console.log(objstr.substr(0, 20));
     console.log(objstr.substr(objstr.length - 20, 20));
+    return [];
   }
 }
 

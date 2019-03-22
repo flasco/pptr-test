@@ -14,6 +14,7 @@ class Base {
   }
 
   log(str) {
+    console.log(str);
     notifier.notify({
       title: 'LEARN',
       message: str
