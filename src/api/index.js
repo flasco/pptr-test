@@ -24,7 +24,7 @@ async function fetch20News() {
   const { data } = await axios.get(news.url);
   const obj = data.substr(14).substr(0, data.length - 15);
   const list = JSON.parse(obj)[news.key].list;
-  return list.slice(0, 20);
+  return list.slice(0, 200);
 }
 
 async function fetch20Vedios() {
