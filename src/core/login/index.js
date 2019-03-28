@@ -15,8 +15,8 @@ class Login extends Base {
       await this.page.goto('https://pc.xuexi.cn/points/login.html');
       const loginUrl = await this.page.evaluate(() => {
         const src = document
-          .querySelector('#ddlogin-iframe')
-          .src.split('?goto=')[1];
+          .querySelector('#ddlogin')
+          .innerHTML.match('src=.*?goto=(.*)" frame')[1];
         return decodeURIComponent(src);
       });
 
