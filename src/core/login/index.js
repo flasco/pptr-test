@@ -13,6 +13,7 @@ class Login extends Base {
     if (isExpired) {
       await this.page.evaluate(() => document.cookie = '');
       await this.page.goto('https://pc.xuexi.cn/points/login.html');
+      await this.page.waitForSelector('#ddlogin-iframe');
       const loginUrl = await this.page.evaluate(() => {
         const src = document
           .querySelector('#ddlogin')
