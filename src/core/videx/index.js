@@ -10,9 +10,9 @@ class Videx extends Base {
   async start({ sum, time }, isHotTime) {
     if (isHotTime) {
       this.sum = ((sum + 1) / 2) >>> 0; // 观看数
-      this.time = (((time + 1) / 2) >>> 0) * 5; // 所需要的分钟数
+      this.time = (((time + 1) / 2) >>> 0) * 3; // 所需要的分钟数
     } else {
-      this.time = time * 8;
+      this.time = time * 3;
       this.sum = sum;
     }
 

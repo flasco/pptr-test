@@ -75,12 +75,10 @@ class App {
         this.article.log('finish!');
         break;
       }
-      const isHotTime = this.work.isHOTTIME();
-      !isHotTime && console.log('现在不是双倍时间，建议双倍时间再打开');
       if (article.sum > 0 || article.time > 0)
-        await this.article.start(article, isHotTime);
+        await this.article.start(article);
       if (video.sum > 0 || video.time > 0)
-        await this.videx.start(video, isHotTime);
+        await this.videx.start(video);
     }
 
     process.exit(0);

@@ -7,9 +7,9 @@ class Article extends Base {
   async start({ sum, time }, isHotTime) {
     if (isHotTime) {
       this.sum = ((sum + 1) / 2) >>> 0; // 阅读数
-      this.time = (((time + 1) / 2) >>> 0) * 4; // 所需要的分钟数
+      this.time = (((time + 1) / 2) >>> 0) * 2; // 所需要的分钟数
     } else {
-      this.time = time * 4;
+      this.time = time * 2;
       this.sum = sum;
     }
 
