@@ -14,14 +14,29 @@ class Login extends Base {
       await this.page.evaluate(() => document.cookie = '');
       await this.page.goto('https://pc.xuexi.cn/points/login.html');
       await this.page.waitForSelector('#ddlogin-iframe');
-      const loginUrl = await this.page.evaluate(() => {
-        const src = document
-          .querySelector('#ddlogin')
-          .innerHTML.match('src=.*?goto=(.*)" frame')[1];
-        return decodeURIComponent(src);
+      await this.page.evaluate(() => {
+        function animateScroll(element, speed) {
+          let rect = element.getBoundingClientRect();
+          //获取元素相对窗口的top值，此处应加上窗口本身的偏移
+          let top = window.pageYOffset + rect.top;
+          let currentTop = 0;
+          let requestId;
+          //采用requestAnimationFrame，平滑动画
+          function step(timestamp) {
+            currentTop += speed;
+            if (currentTop <= top) {
+              window.scrollTo(0, currentTop);
+              requestId = window.requestAnimationFrame(step);
+            } else {
+              window.cancelAnimationFrame(requestId);
+            }
+          }
+          window.requestAnimationFrame(step);
+        }
+        const el = document.querySelectorAll('#ddlogin-iframe')[0];
+        if (el != null) animateScroll(el, 6);
       });
 
-      await this.page.goto(loginUrl);
       this.log('请扫描登录二维码');
       await this.page.waitForNavigation({ timeout: 0 });
     }

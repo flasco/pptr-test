@@ -37,8 +37,6 @@ async function fetch20Vedios() {
     const list = JSON.parse(objstr); // 还有list2, 3, 4
     return [...list.list1, ...list.list2];
   } catch(error) {
-    console.log(objstr.substr(0, 20));
-    console.log(objstr.substr(objstr.length - 20, 20));
     return [];
   }
 }
