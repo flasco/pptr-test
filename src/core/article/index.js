@@ -43,11 +43,10 @@ class Article extends Base {
     const latestNews = await fetch20News();
     const list = latestNews.map(item => {
       return {
-        id: item._id,
-        url: item.static_page_url
+        id: item.itemId,
+        url: item.url
       };
     });
-    list.reverse();
     for (let i = 0, j = list.length; i < j && this.readArr.length < this.sum; i++) {
       const { id, url } = list[i];
       if (!articleStore.hasArticleId(id)) {

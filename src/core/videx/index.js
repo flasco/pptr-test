@@ -94,8 +94,8 @@ class Videx extends Base {
     const list = await fetch20Vedios();
     const listx = list.map(item => {
       return {
-        id: item.frst_name,
-        url: item.static_page_url
+        id: item.itemId,
+        url: item.url
       };
     });
 
