@@ -11,7 +11,7 @@ class Work {
 
   async getWork() {
     const result = await getState();
-    const used = result.data.filter(item => usedRules.includes(item.ruleId));
+    const used = result.data.dayScoreDtos.filter(item => usedRules.includes(item.ruleId));
 
     const articleSum = used.find(item => item.ruleId === 1);
     const articleTime = used.find(item => item.ruleId === 1002);
