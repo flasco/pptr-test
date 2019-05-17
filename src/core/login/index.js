@@ -2,7 +2,7 @@ const Base = require('../base');
 
 class Login extends Base {
   async startLogin() {
-    await this.page.goto('https://pc.xuexi.cn/points/login.html');
+    await this.page.goto('https://pc.xuexi.cn/points/login.html?ref=https%3A%2F%2Fwww.xuexi.cn%2F');
 
     const iframe = this.page.frames()[1];
 
@@ -12,7 +12,7 @@ class Login extends Base {
 
     if (isExpired) {
       await this.page.evaluate(() => document.cookie = '');
-      await this.page.goto('https://pc.xuexi.cn/points/login.html');
+      await this.page.goto('https://pc.xuexi.cn/points/login.html?ref=https%3A%2F%2Fwww.xuexi.cn%2F');
       await this.page.waitForSelector('#ddlogin-iframe');
       await this.page.evaluate(() => {
         function animateScroll(element, speed) {
