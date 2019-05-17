@@ -42,7 +42,7 @@ class Login extends Base {
     }
 
     const curUrl = await this.page.evaluate(() => location.href);
-    if (curUrl.includes('my-study')) {
+    if (curUrl.includes('xuexi.cn')) {
       console.log('success login.');
       if (isExpired) {
         await this.saveCookies();
