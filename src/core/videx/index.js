@@ -36,6 +36,8 @@ class Videx extends Base {
       const current = this.watchArr[i];
       await this.page.goto(current);
 
+      await this.page.waitForSelector('.prism-player');
+
       const haveVideo = await this.page.evaluate(() => document.querySelectorAll('.prism-player').length > 0);
 
       if (!haveVideo) continue;
