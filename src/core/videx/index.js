@@ -36,9 +36,11 @@ class Videx extends Base {
       const current = this.watchArr[i];
       await this.page.goto(current);
 
-      await this.page.waitForSelector('.prism-player');
+      await this.page.waitForSelector('.duration');
 
-      const haveVideo = await this.page.evaluate(() => document.querySelectorAll('.prism-player').length > 0);
+      const haveVideo = await this.page.evaluate(
+        () => document.querySelectorAll('.prism-player').length > 0
+      );
 
       if (!haveVideo) continue;
 
@@ -65,16 +67,21 @@ class Videx extends Base {
         if (el != null) animateScroll(el, 6);
       });
 
-      const time = await this.page.evaluate(() => {
-        const el = document.querySelectorAll('.duration')[0];
-        return el.textContent;
-      });
+      let time;
+      for (let i = 0; ; await this.page.waitFor(1000)) {
+        time = await this.page.evaluate(() => {
+          const el = document.querySelectorAll('.duration')[0];
+          return el.textContent;
+        });
+        if (time !== '00:00') break;
+        if (i++ > 30) throw new Error('时间查询失败');
+      }
 
       await this.page.evaluate(() => {
         // 如果不在自动播放，就点一下
         const el = document.querySelectorAll('.prism-big-play-btn')[0];
         if (el.style.display === 'block') el.click();
-      })
+      });
 
       console.log(`第 ${i + 1} 个, druation - ${time}.`);
 
