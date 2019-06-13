@@ -60,25 +60,36 @@ class App {
     await page.setCookie(...cookies);
   }
 
-  async start() {
-    await this.init();
-    await this.login.startLogin();
-    let triedCnt = 0;
-    while (1) {
-      triedCnt++;
+  async workQueue() {
+    for (let triedCnt = 0; ; triedCnt++) {
       if (triedCnt > 3) {
         this.article.log('error, tried cnt too much');
         break;
       }
-      const { article, video } = await this.work.getWork();
+      const result = await this.work.getWork();
+      if (result == null) return false;
+      const { article, video } = result;
       if (article.sum + article.time + video.sum + video.time < 1) {
         this.article.log('finish!');
         break;
       }
-      if (article.sum > 0 || article.time > 0)
+      if (article.sum > 0 || article.time > 0) {
         await this.article.start(article);
-      if (video.sum > 0 || video.time > 0)
-        await this.videx.start(video);
+      }
+      if (video.sum > 0 || video.time > 0) await this.videx.start(video);
+    }
+    return true;
+  }
+
+  async start() {
+    await this.init();
+    let isExpired = null;
+    while (1) {
+      await this.login.startLogin(isExpired);
+      if (await this.workQueue()) break;
+      if (isExpired === true) break;
+      isExpired = true;
+      this.article.log('is expired!, tried again...');
     }
 
     process.exit(0);

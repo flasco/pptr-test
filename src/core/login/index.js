@@ -1,14 +1,16 @@
 const Base = require('../base');
 
 class Login extends Base {
-  async startLogin() {
+  async startLogin(isExpired) {
     await this.page.goto('https://pc.xuexi.cn/points/login.html?ref=https%3A%2F%2Fwww.xuexi.cn%2F');
 
     const iframe = this.page.frames()[1];
 
-    const isExpired = await iframe.evaluate(
-      () => document.querySelectorAll('.zhuxiao')[0].style.display === 'none'
-    );
+    if (isExpired == null) {
+      isExpired = await iframe.evaluate(
+        () => document.querySelectorAll('.zhuxiao')[0].style.display === 'none'
+      );
+    }
 
     if (isExpired) {
       await this.page.evaluate(() => document.cookie = '');
