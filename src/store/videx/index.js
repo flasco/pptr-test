@@ -11,7 +11,7 @@ class Videx extends Base {
 
   pushVidexId(key) {
     const map = this.store;
-    map[key] = 1;
+    map[key] = new Date().getTime(); // 因为添加了自动清理，所以value必须设置成时间戳
     return this.setStore(map);
   }
 }
