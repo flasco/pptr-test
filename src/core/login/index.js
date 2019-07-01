@@ -10,7 +10,7 @@ class Login extends Base {
         if (href.includes('points/login')) return true;
         const tipBox = document.querySelectorAll('.ant-modal-confirm-title');
         if (tipBox.length > 0) {
-          const tips = [0].textContent;
+          const tips = tipBox[0].textContent;
           if (tips.includes('重新登录')) return true;
         }
         return false;

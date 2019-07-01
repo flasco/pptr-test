@@ -57,7 +57,7 @@ class App {
       const value = pair.trim().slice(pair.trim().indexOf('=') + 1);
       return { name, value, domain: '.xuexi.cn' };
     });
-    await page.setCookie(...cookies);
+    // await page.setCookie(...cookies);
   }
 
   async workQueue() {
