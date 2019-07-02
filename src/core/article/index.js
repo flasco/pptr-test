@@ -14,6 +14,8 @@ class Article extends Base {
     }
 
     if (this.sum < 1 && this.time < 1) return;
+    if (this.time < 1) this.time = 1; // 添加最低阅读时间
+    if (this.sum < 1) this.sum = 1; // 添加最低阅读内容
     console.log(`需要查看 ${this.sum} 篇文章，花费 ${this.time} 分钟.`);
 
     this.readArr = [];
