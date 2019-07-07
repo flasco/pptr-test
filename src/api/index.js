@@ -25,12 +25,22 @@ async function fetch20Vedios() {
 }
 
 async function getState() {
-  const { data } = await axios.get(
-    'https://pc-api.xuexi.cn/open/api/score/today/queryrate'
+  const {
+    data: { data },
+  } = await axios.get('https://pc-api.xuexi.cn/open/api/score/today/queryrate');
+  return data;
+}
+
+async function getptp() {
+  const {
+    data: { data },
+  } = await axios.get(
+    'https://pc-proxy-api.xuexi.cn/api/point/today/queryrate'
   );
   return data;
 }
 
+exports.getptp = getptp;
 exports.getState = getState;
 exports.fetch20News = fetch20News;
 exports.fetch20Vedios = fetch20Vedios;

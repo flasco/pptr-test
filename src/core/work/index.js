@@ -1,6 +1,7 @@
-const { getState } = require('../../api');
+const { getState, getptp } = require('../../api');
 
 const usedRules = [1, 2, 9, 1002, 1003];
+const ptpTasks = ['1', '2'];
 class Work {
   // 每天6:00-8:30、12:00-14:00、20:00-22:30
   isHOTTIME() {
@@ -11,30 +12,42 @@ class Work {
 
   async getWork() {
     const result = await getState();
-    if (result.data.dayScoreDtos == null) return null;
-    const used = result.data.dayScoreDtos.filter(item => usedRules.includes(item.ruleId));
+    const ptp = await getptp();
+    if (result.dayScoreDtos == null) return null;
+    if (ptp.taskProgressDtos == null) return null;
+    const used = result.dayScoreDtos.filter(item =>
+      usedRules.includes(item.ruleId)
+    );
+    const ptpUsed = ptp.taskProgressDtos.filter(item =>
+      ptpTasks.includes(item.taskCode)
+    );
 
-    const articleSum = used.find(item => item.ruleId === 1);
+    const ptpArticle = ptpUsed.find(item => item.taskCode === '1');
+    const ptpVedio = ptpUsed.find(item => item.taskCode === '2');
+
     const articleTime = used.find(item => item.ruleId === 1002);
-    const needRead = articleSum.dayMaxScore - articleSum.currentScore;
+    const needRead = getNeededSum(ptpArticle);
     const needReadTime = articleTime.dayMaxScore - articleTime.currentScore;
 
-    const videoSum = used.find(item => item.ruleId === 2);
     const videoSumTime = used.find(item => item.ruleId === 1003);
-    const needWatch = videoSum.dayMaxScore - videoSum.currentScore;
+    const needWatch = getNeededSum(ptpVedio);
     const needWatchTime = videoSumTime.dayMaxScore - videoSumTime.currentScore;
 
     return {
       article: {
         sum: needRead,
-        time: needReadTime
+        time: needReadTime,
       },
       video: {
         sum: needWatch,
-        time: needWatchTime
-      }
+        time: needWatchTime,
+      },
     };
   }
 }
 
 module.exports = Work;
+
+function getNeededSum({ maxCompletedCount, completedCount, target, progress }) {
+  return (maxCompletedCount - completedCount) * target - progress;
+}
