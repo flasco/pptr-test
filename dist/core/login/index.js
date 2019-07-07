@@ -45,7 +45,7 @@ class Login extends base_1.default {
         }
         const curUrl = await this.page.evaluate(() => location.href);
         if (curUrl.includes('xuexi.cn')) {
-            logger_1.time.success('success login.');
+            logger_1.time.success('login succeed.');
             if (isExpired) {
                 await this.saveCookies();
                 logger_1.time.success('save login state succeed');
