@@ -1,4 +1,4 @@
-const Base = require('../base');
+import Base from '../base';
 
 class Cookie extends Base {
   constructor() {
@@ -8,7 +8,7 @@ class Cookie extends Base {
     return this.getStore().str;
   }
 
-  setCookie(str) {
+  setCookie(str: string) {
     this.store.str = str;
     this.setStore(this.store);
     this.save();
@@ -17,4 +17,4 @@ class Cookie extends Base {
 
 const newX = new Cookie();
 
-module.exports = newX;
+export default newX;

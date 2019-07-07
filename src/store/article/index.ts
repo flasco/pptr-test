@@ -1,21 +1,21 @@
-const Base = require('../base');
+import Base from '../base';
 
-class Videx extends Base {
+class Article extends Base {
   constructor() {
-    super('videx', {});
+    super('article', {});
   }
-  hasVidexId(key) {
+  hasArticleId(key: string) {
     const map = this.store;
     return map[key] != null;
   }
 
-  pushVidexId(key) {
+  pushArticleId(key: string) {
     const map = this.store;
     map[key] = new Date().getTime(); // 因为添加了自动清理，所以value必须设置成时间戳
     return this.setStore(map);
   }
 }
 
-const videxo = new Videx();
+const article = new Article();
 
-module.exports = videxo;
+export default article;

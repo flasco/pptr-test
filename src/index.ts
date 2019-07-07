@@ -1,15 +1,22 @@
-const puppeteer = require('puppeteer-core');
+import puppeteer, { Page } from 'puppeteer-core';
+import { time as Logger } from '@flasco/logger'
 
-const Login = require('./core/login');
-const Work = require('./core/work');
-const Article = require('./core/article');
-const Videx = require('./core/videx');
+import Login from './core/login';
+import Work from './core/work';
+import Article from './core/article';
+import Videx from './core/videx';
 
-const findChrome = require('./utils/find-chrome');
+import Cookie from './store/cookie';
 
-const Cookie = require('./store/cookie');
+import findChrome from './utils/find-chrome';
+
 
 class App {
+  login: any;
+  work: any;
+  article: any;
+  videx: any;
+
   async init() {
     const [width, height] = [800, 600];
 
@@ -24,13 +31,13 @@ class App {
         '--no-sandbox',
         // 下面 2 个是为了允许自动播放
         '--autoplay-policy',
-        '--no-user-gesture-required'
+        '--no-user-gesture-required',
       ],
-      executablePath
+      executablePath,
     });
     const page = await browser.newPage();
 
-    await this.addCookies(Cookie.getCookie(), page);
+    await this.addCookies(<string>Cookie.getCookie(), page);
     await page.setViewport({ width, height });
 
     await page.setRequestInterception(true);
@@ -44,14 +51,14 @@ class App {
       else request.continue();
     });
 
+    this.work = new Work();
     this.login = new Login(browser, page);
-    this.work = new Work(browser, page);
     this.article = new Article(browser, page);
     this.videx = new Videx(browser, page);
   }
 
-  async addCookies(cookies_str, page) {
-    if (cookies_str == '') return;
+  async addCookies(cookies_str: string, page: Page) {
+    if (cookies_str === '') return;
     const cookies = cookies_str.split(';').map(pair => {
       const name = pair.trim().slice(0, pair.trim().indexOf('='));
       const value = pair.trim().slice(pair.trim().indexOf('=') + 1);
@@ -70,7 +77,7 @@ class App {
       if (result == null) return false;
       const { article, video } = result;
       if (article.sum + article.time + video.sum + video.time < 1) {
-        this.article.log('finish!');
+        Logger.success('finish!');
         break;
       }
       if (article.sum > 0 || article.time > 0) {
@@ -96,4 +103,4 @@ class App {
   }
 }
 
-module.exports = App;
+export = App;

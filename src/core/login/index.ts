@@ -1,7 +1,9 @@
-const Base = require('../base');
+import { time as Logger } from '@flasco/logger';
+
+import Base from '../base';
 
 class Login extends Base {
-  async startLogin(isExpired) {
+  async startLogin(isExpired: boolean) {
     await this.page.goto('https://pc.xuexi.cn/points/my-points.html');
 
     if (isExpired == null) {
@@ -10,11 +12,11 @@ class Login extends Base {
         if (href.includes('points/login')) return true;
         const tipBox = document.querySelectorAll('.ant-modal-confirm-title');
         if (tipBox.length > 0) {
-          const tips = tipBox[0].textContent;
+          const tips = tipBox[0].textContent || '';
           if (tips.includes('重新登录')) return true;
         }
         return false;
-      })
+      });
     }
 
     if (isExpired) {
@@ -22,12 +24,13 @@ class Login extends Base {
         document.cookie = '';
         const href = window.location.href;
         if (!href.includes('points/login')) {
-          window.location.href = 'https://pc.xuexi.cn/points/login.html?ref=https://pc.xuexi.cn/points/my-points.html'
+          window.location.href =
+            'https://pc.xuexi.cn/points/login.html?ref=https://pc.xuexi.cn/points/my-points.html';
         }
       });
       await this.page.waitForSelector('#ddlogin-iframe');
       await this.page.evaluate(() => {
-        function striaightScroll(element) {
+        function striaightScroll(element: Element) {
           let rect = element.getBoundingClientRect();
           //获取元素相对窗口的top值，此处应加上窗口本身的偏移
           let top = window.pageYOffset + rect.top;
@@ -44,13 +47,13 @@ class Login extends Base {
 
     const curUrl = await this.page.evaluate(() => location.href);
     if (curUrl.includes('xuexi.cn')) {
-      console.log('success login.');
+      Logger.success('success login.');
       if (isExpired) {
         await this.saveCookies();
-        console.log('save login state succeed');
+        Logger.success('save login state succeed');
       }
     }
   }
 }
 
-module.exports = Login;
+export default Login;

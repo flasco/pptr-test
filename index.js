@@ -1,6 +1,6 @@
 const notifier = require('node-notifier');
 
-const App = require('./src');
+const App = require('./dist');
 
 new App().start().catch(e => {
   console.log(e);

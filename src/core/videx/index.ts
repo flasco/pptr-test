@@ -1,13 +1,15 @@
-const formatDate = require('date-fns/format');
+import formatDate from 'date-fns/format';
+import { time as Logger } from '@flasco/logger';
 
-const Base = require('../base');
-
-const ViStore = require('../../store/videx');
-
-const { fetch20Vedios } = require('../../api');
+import Base, { IStartOpt } from '../base';
+import ViStore from '../../store/videx';
+import { fetch20Vedios } from '../../api';
 
 class Videx extends Base {
-  async start({ sum, time }, isHotTime) {
+  sum: number = 0;
+  time: number = 0;
+  watchArr: string[] = [];
+  async start({ sum, time }: IStartOpt, isHotTime?: boolean) {
     if (isHotTime) {
       this.sum = ((sum + 1) / 2) >>> 0; // 观看数
       this.time = (((time + 1) / 2) >>> 0) * 3; // 所需要的分钟数
@@ -17,17 +19,17 @@ class Videx extends Base {
     }
 
     if (this.sum < 1 && this.time < 1) return;
-    console.log(`需要查看 ${this.sum} 个视频，花费 ${this.time} 分钟.`);
+    Logger.info(`需要查看 ${this.sum} 个视频，花费 ${this.time} 分钟.`);
 
     this.watchArr = [];
 
     await this.getVidexByNews();
 
     if (this.watchArr.length >= this.sum) {
-      console.log('已获取足够的视频link，开始watch...');
+      Logger.info('已获取足够的视频link，开始watch...');
       await this.watchVidex();
     } else {
-      console.log('视频 link 不够...');
+      Logger.error('视频 link 不够...');
     }
   }
 
@@ -45,14 +47,14 @@ class Videx extends Base {
       if (!haveVideo) continue;
 
       await this.page.evaluate(() => {
-        function animateScroll(element, speed) {
+        function animateScroll(element: Element, speed: number) {
           let rect = element.getBoundingClientRect();
           //获取元素相对窗口的top值，此处应加上窗口本身的偏移
           let top = window.pageYOffset + rect.top;
           let currentTop = 0;
-          let requestId;
+          let requestId: number;
           //采用requestAnimationFrame，平滑动画
-          function step(timestamp) {
+          function step() {
             currentTop += speed;
             if (currentTop <= top) {
               window.scrollTo(0, currentTop);
@@ -71,7 +73,7 @@ class Videx extends Base {
       for (let i = 0; ; await this.page.waitFor(1000)) {
         time = await this.page.evaluate(() => {
           const el = document.querySelectorAll('.duration')[0];
-          return el.textContent;
+          return el.textContent || '';
         });
         if (time !== '00:00') break;
         if (i++ > 30) throw new Error('时间查询失败');
@@ -79,11 +81,13 @@ class Videx extends Base {
 
       await this.page.evaluate(() => {
         // 如果不在自动播放，就点一下
-        const el = document.querySelectorAll('.prism-big-play-btn')[0];
+        const el = <HTMLElement>(
+          document.querySelectorAll('.prism-big-play-btn')[0]
+        );
         if (el.style.display === 'block') el.click();
       });
 
-      console.log(`第 ${i + 1} 个, druation - ${time}.`);
+      Logger.info(`第 ${i + 1} 个, druation - ${time}.`);
 
       const timeArr = time.split(':');
       let duration = 0;
@@ -101,10 +105,10 @@ class Videx extends Base {
 
   async getVidexByNews() {
     const list = await fetch20Vedios();
-    const listx = list.map(item => {
+    const listx = list.map((item: any) => {
       return {
         id: item.itemId,
-        url: item.url
+        url: item.url,
       };
     });
 
@@ -133,4 +137,4 @@ class Videx extends Base {
   }
 }
 
-module.exports = Videx;
+export default Videx;

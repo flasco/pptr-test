@@ -1,12 +1,12 @@
-const fs = require('fs');
-const { platform } = require('os');
-const isWin = platform().startsWith("win");
+import fs from 'fs';
+import { platform } from 'os';
+const isWin = platform().startsWith('win');
 
-function isExist(filePath) {
+export function isExist(filePath: string) {
   return fs.existsSync(filePath);
 }
 
-function checkDirExist(folderpath) {
+export function checkDirExist(folderpath: string) {
   if (isWin) {
     const pathArr = folderpath.split('\\');
     let _path = '';
@@ -32,13 +32,9 @@ function checkDirExist(folderpath) {
   }
 }
 
-function writeFileSync(filePath, content) {
+export function writeFileSync(filePath: string, content: any) {
   return fs.writeFileSync(filePath, JSON.stringify(content, null, 2));
 }
 
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-exports.delay = delay;
-exports.isExist = isExist;
-exports.checkDirExist = checkDirExist;
-exports.writeFileSync = writeFileSync;
+export const delay = (ms: number) =>
+  new Promise(resolve => setTimeout(resolve, ms));
