@@ -27,7 +27,7 @@
     "baseUrl": "./",                        // 用于解析非相对模块名称的基目录
     "paths":{},                                     // 模块名到基于 baseUrl 的路径映射的列表
 
-    "declaration": true,                   // 生成相应的 '.d.ts' 文件
+    "declaration": false,                   // 生成相应的 '.d.ts' 文件
 
     /* Source Map Options */
     "sourceMap": true,                     // 生成相应的 '.map' 文件

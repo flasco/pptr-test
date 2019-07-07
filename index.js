@@ -4,8 +4,12 @@ const notifier = require('node-notifier');
 
 const App = require('./dist');
 
-Logger.info('welcome to use');
-Logger.info('current version:', process.env.npm_config_init_version);
+const currentVersion = process.env.npm_config_init_version;
+
+if (currentVersion != null) {
+  Logger.info('welcome to use');
+  Logger.info('current version:', currentVersion);
+}
 
 new App().start().catch(e => {
   console.log(e);
