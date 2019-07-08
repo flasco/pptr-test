@@ -3,7 +3,7 @@ a learning project. just use to learn.
 
 If there is any dispute, author is not responsible for it.
 
-## Precautions
+## Attention
 
 make sure your `node` version is greater than or equal to `8.x`, make sure you have installed `yarn` in global
 
