@@ -35,6 +35,9 @@ class Work {
 }
 exports.default = Work;
 function getNeededSum({ maxCompletedCount, completedCount, target, progress }) {
-    return (maxCompletedCount - completedCount) * target - progress;
+    const needWatch = (maxCompletedCount - completedCount) * target;
+    if (needWatch < 1)
+        return 0;
+    return needWatch - progress;
 }
 //# sourceMappingURL=index.js.map

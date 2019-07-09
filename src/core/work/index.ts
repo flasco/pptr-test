@@ -43,5 +43,7 @@ class Work {
 export default Work;
 
 function getNeededSum({ maxCompletedCount, completedCount, target, progress }: any) {
-  return (maxCompletedCount - completedCount) * target - progress;
+  const needWatch = (maxCompletedCount - completedCount) * target;
+  if (needWatch < 1) return 0;
+  return needWatch - progress;
 }
