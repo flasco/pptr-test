@@ -39,7 +39,7 @@ class Article extends Base {
       await this.page.waitFor(700);
       await this.autoScroll(this.page, true);
       let time = ((1000 * 61 * this.time) / j) >>> 0;
-      if (time < 60000) time = 60000;
+      if (time < 75000) time = 75000;
       Logger.info(`读完第 ${i + 1} 篇, wait ${(time / 1000) >>> 0} sec.`);
       await this.page.waitFor(time);
     }
