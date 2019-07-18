@@ -1,11 +1,18 @@
 # PPTR-TEST
-a learning project. just use to learn.  
+
+> 别问，问就是不知道
+
+a learning project. just use to learn.
 
 If there is any dispute, author is not responsible for it.
 
 ## Attention
 
-make sure your `node` version is greater than or equal to `8.x`, make sure you have installed `yarn` in global
+### required
+
+- node: 8.x+
+- yarn 1.16+
+- chrome browser: 65+
 
 ```bash
 # install yarn in global
@@ -16,3 +23,9 @@ npm i yarn -g
 ```bash
 echo "alias lnp_f='sh ${PWD}/start.sh'" >> ~/.bash_profile
 ```
+
+## Tips
+
+If you want to use it in windows or linux, goto repo directory and run `node index.js`.
+
+Don't forget install dependencies.
