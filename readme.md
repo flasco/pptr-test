@@ -11,7 +11,7 @@ If there is any dispute, author is not responsible for it.
 ### required
 
 - node: 8.x+
-- yarn 1.16+
+- yarn: 1.16+
 - chrome browser: 65+
 
 ```bash
