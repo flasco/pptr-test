@@ -4,7 +4,7 @@ const notifier = require('node-notifier');
 
 const App = require('./dist');
 
-const currentVersion = process.env.npm_config_init_version;
+const currentVersion = process.env.npm_package_version;
 
 if (currentVersion != null) {
   Logger.info('welcome to use');
