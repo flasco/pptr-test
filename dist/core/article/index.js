@@ -14,8 +14,8 @@ class Article extends base_1.default {
     }
     async start({ sum, time }, isHotTime) {
         if (isHotTime) {
-            this.sum = ((sum + 1) / 2) >>> 0;
-            this.time = (((time + 1) / 2) >>> 0) * 2;
+            this.sum = ((sum + 1) / 2) | 0;
+            this.time = (((time + 1) / 2) | 0) * 2;
         }
         else {
             this.time = time * 2;
@@ -41,10 +41,10 @@ class Article extends base_1.default {
             await this.autoScroll(this.page);
             await this.page.waitFor(700);
             await this.autoScroll(this.page, true);
-            let time = ((1000 * 61 * this.time) / j) >>> 0;
+            let time = ((1000 * 61 * this.time) / j) | 0;
             if (time < 75000)
-                time = 75000;
-            logger_1.time.info(`读完第 ${i + 1} 篇, wait ${(time / 1000) >>> 0} sec.`);
+                time = (75000 + Math.random() * 30000) | 0;
+            logger_1.time.info(`读完第 ${i + 1} 篇, wait ${(time / 1000) | 0} sec.`);
             await this.page.waitFor(time);
         }
         article_1.default.save();
