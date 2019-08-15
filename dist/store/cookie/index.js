@@ -10,8 +10,8 @@ class Cookie extends base_1.default {
     getCookie() {
         const store = this.getStore();
         const time = (store.time || 0);
-        if (Date.now() - time > 3600000 * 3) {
-            logger_1.time.info('cookie 存储时长超过三小时，请重新登录');
+        if (Date.now() - time > 3600000 * 5) {
+            logger_1.time.info('cookie 存储时长超过五小时，请重新登录');
             return '';
         }
         return store.str;
