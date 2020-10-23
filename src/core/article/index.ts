@@ -32,7 +32,7 @@ class Article extends Base {
   }
 
   async readArticle() {
-    for (let i = 0, j = this.readArr.length; i < j; i++) {
+    for (let i = 0; i < this.sum; i++) {
       const current = this.readArr[i];
       await this.page.goto(current);
       await this.autoScroll(this.page);
