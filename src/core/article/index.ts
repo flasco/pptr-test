@@ -15,7 +15,7 @@ class Article extends Base {
       this.sum = ((sum + 1) / 2) | 0; // 阅读数
       this.time = (((time + 1) / 2) | 0) * 2; // 所需要的分钟数
     } else {
-      this.time = time * 2;
+      this.time = time;
       this.sum = sum;
     }
 

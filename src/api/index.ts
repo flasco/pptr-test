@@ -31,11 +31,11 @@ export async function getState() {
   return data;
 }
 
-export async function getptp() {
-  const {
-    data: { data },
-  } = await axios.get(
-    'https://pc-proxy-api.xuexi.cn/api/point/today/queryrate'
-  );
-  return data;
-}
+// export async function getptp() {
+//   const {
+//     data: { data },
+//   } = await axios.get(
+//     'https://pc-proxy-api.xuexi.cn/api/point/today/queryrate'
+//   );
+//   return data;
+// }
