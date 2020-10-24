@@ -4,6 +4,7 @@ import { time as Logger } from '@flasco/logger';
 import Base, { IStartOpt } from '../base';
 import articleStore from '../../store/article';
 import { fetch20News } from '../../api';
+import { delay } from '../../utils';
 
 class Article extends Base {
   sum: number = 0;
@@ -36,12 +37,12 @@ class Article extends Base {
       const current = this.readArr[i];
       await this.page.goto(current);
       await this.autoScroll(this.page);
-      await this.page.waitFor(700);
+      await delay(700);
       await this.autoScroll(this.page, true);
       let time = ((1000 * 61 * this.time) / this.sum) | 0;
       if (time < 75000) time = (75000 + Math.random() * 30000) | 0;
       Logger.info(`读完第 ${i + 1} 篇, wait ${(time / 1000) | 0} sec.`);
-      await this.page.waitFor(time);
+      await delay(time);
     }
     articleStore.save();
   }

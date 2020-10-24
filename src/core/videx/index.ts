@@ -4,6 +4,7 @@ import { time as Logger } from '@flasco/logger';
 import Base, { IStartOpt } from '../base';
 import ViStore from '../../store/videx';
 import { fetch20Vedios } from '../../api';
+import { delay } from '../../utils';
 
 class Videx extends Base {
   sum: number = 0;
@@ -70,7 +71,7 @@ class Videx extends Base {
       });
 
       let time;
-      for (let i = 0; ; await this.page.waitFor(1000)) {
+      for (let i = 0; ; await delay(1000)) {
         time = await this.page.evaluate(() => {
           const el = document.querySelectorAll('.duration')[0];
           return el.textContent || '';
@@ -98,7 +99,7 @@ class Videx extends Base {
         duration = +timeArr[0] * 3600 + +timeArr[1] * 60 + +timeArr[2];
       }
 
-      await this.page.waitFor(duration * 1001);
+      await delay(duration * 1001);
     }
     ViStore.save();
   }
