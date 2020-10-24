@@ -22,7 +22,7 @@ class App {
 
     const { executablePath } = await findChrome();
     const browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       args: [
         '--mute-audio',
         `--window-size=${width},${height}`,
@@ -37,7 +37,7 @@ class App {
     });
     const page = await browser.newPage();
 
-    await this.addCookies(<string>Cookie.getCookie(), page);
+    // await this.addCookies(<string>Cookie.getCookie(), page);
     await page.setViewport({ width, height });
 
     await page.setRequestInterception(true);

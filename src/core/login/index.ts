@@ -1,4 +1,6 @@
 import { time as Logger } from '@flasco/logger';
+import { writeFileSync } from 'fs';
+import open from 'open';
 
 import Base from '../base';
 
@@ -41,6 +43,21 @@ class Login extends Base {
         if (el != null) striaightScroll(el);
       });
 
+      const frame = this.page
+        .frames()
+        .find(i => i.url().includes('login.xuexi.cn'));
+
+      const imgSrc = await frame!.evaluate(() => {
+        const img = document.querySelectorAll(
+          '#app .login_qrcode_content img'
+        )[0] as HTMLImageElement;
+        return img.src;
+      });
+
+      writeFileSync('login.png', dataURLtoBlob(imgSrc));
+
+      await open('login.png');
+
       this.log('请扫描登录二维码');
       await this.page.waitForNavigation({ timeout: 0 });
     }
@@ -54,6 +71,11 @@ class Login extends Base {
       }
     }
   }
+}
+
+function dataURLtoBlob(dataurl: string) {
+  const base64Data = dataurl.replace(/^data:image\/\w+;base64,/, '');
+  return Buffer.from(base64Data, 'base64');
 }
 
 export default Login;
