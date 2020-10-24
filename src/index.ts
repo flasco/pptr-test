@@ -37,7 +37,7 @@ class App {
     });
     const page = await browser.newPage();
 
-    // await this.addCookies(<string>Cookie.getCookie(), page);
+    await this.addCookies(<string>Cookie.getCookie(), page);
     await page.setViewport({ width, height });
 
     await page.setRequestInterception(true);
