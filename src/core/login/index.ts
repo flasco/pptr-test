@@ -5,7 +5,7 @@ import open from 'open';
 import Base from '../base';
 
 class Login extends Base {
-  async startLogin(isExpired: boolean) {
+  async startLogin(isExpired?: boolean) {
     await this.page.goto('https://pc.xuexi.cn/points/my-points.html');
 
     if (isExpired == null) {
@@ -33,9 +33,9 @@ class Login extends Base {
       await this.page.waitForSelector('#ddlogin-iframe');
       await this.page.evaluate(() => {
         function striaightScroll(element: Element) {
-          let rect = element.getBoundingClientRect();
+          const rect = element.getBoundingClientRect();
           //获取元素相对窗口的top值，此处应加上窗口本身的偏移
-          let top = window.pageYOffset + rect.top;
+          const top = window.pageYOffset + rect.top;
           //采用requestAnimationFrame，平滑动画
           window.scrollTo(0, top);
         }

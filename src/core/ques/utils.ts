@@ -15,7 +15,7 @@ async function getTips() {
   let tips = [...getDomList(".line-feed font[color=red]")];
   if (tips.length < 1) {
     getDomList(".q-footer span")[0]?.click();
-    await delay(900);
+    await delay(4910);
     tips = [...getDomList(".line-feed font[color=red]")];
   }
 
@@ -32,8 +32,9 @@ async function autoAnswer() {
       for (let i = 0; i < chooses.length; i++) {
         const item = chooses[i];
         const haveIt = results.some((key) => item.textContent!.includes(key));
-        if (haveIt) item.click();
-        await delay(600);
+        const haveIt2 = results.some((key) => key!.includes(item.textContent!));
+        if (haveIt || haveIt2) item.click();
+        await delay(1600);
       }
     }
   };
@@ -42,7 +43,7 @@ async function autoAnswer() {
       const inputs = [...getDomList(".q-body .blank")];
       for (let i = 0; i < inputs.length; i++) {
         inputText2React(inputs[i], results[i]);
-        await delay(500);
+        await delay(2500);
       }
     },
     单选: chooseResolver,
@@ -56,15 +57,16 @@ async function autoAnswer() {
   if (func == null) throw new Error(`异常，不认识的题目！, ${type}`);
   await func();
 
+  await delay(4210);
   getDomList(".action-row button")[0].click();
 }
 
 function inputText2React(dom: any, str: string) {
-  let lastValue = dom.value;
+  const lastValue = dom.value;
   dom.value = str;
-  let event = new Event("input", { bubbles: true });
+  const event = new Event("input", { bubbles: true });
   // hack React16 内部定义了descriptor拦截value，此处重置状态
-  let tracker = dom._valueTracker;
+  const tracker = dom._valueTracker;
   if (tracker) {
     tracker.setValue(lastValue);
   }

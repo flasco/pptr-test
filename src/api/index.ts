@@ -31,6 +31,14 @@ export async function getState() {
   return data;
 }
 
+export async function getWeekQuestion() {
+  const url = 'https://pc-proxy-api.xuexi.cn/api/exam/service/practice/pc/weekly/more?pageNo=1&pageSize=900';
+  const { data } = await axios.get(url);
+  const { data_str } = data;
+  const curData = Buffer.from(data_str, 'base64').toString('utf-8');
+  return JSON.parse(curData);
+}
+
 // export async function getptp() {
 //   const {
 //     data: { data },

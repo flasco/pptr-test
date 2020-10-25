@@ -1,21 +1,22 @@
 import puppeteer, { Page } from 'puppeteer-core';
-import { time as Logger } from '@flasco/logger'
+import { time as Logger } from '@flasco/logger';
 
 import Login from './core/login';
 import Work from './core/work';
 import Article from './core/article';
 import Videx from './core/videx';
+import Question from './core/ques';
 
 import Cookie from './store/cookie';
 
 import findChrome from './utils/find-chrome';
 
-
 class App {
-  login: any;
-  work: any;
-  article: any;
-  videx: any;
+  login!: Login;
+  work!: Work;
+  article!: Article;
+  videx!: Videx;
+  ques!: Question;
 
   async init() {
     const [width, height] = [800, 600];
@@ -55,6 +56,7 @@ class App {
     this.login = new Login(browser, page);
     this.article = new Article(browser, page);
     this.videx = new Videx(browser, page);
+    this.ques = new Question(browser, page);
   }
 
   async addCookies(cookies_str: string, page: Page) {
@@ -84,14 +86,15 @@ class App {
         await this.article.start(article);
       }
       if (video.sum > 0 || video.time > 0) await this.videx.start(video);
+      await this.ques.start();
     }
     return true;
   }
 
   async start() {
     await this.init();
-    let isExpired = null;
-    while (1) {
+    let isExpired = false;
+    for (;;) {
       await this.login.startLogin(isExpired);
       if (await this.workQueue()) break;
       if (isExpired === true) break;
