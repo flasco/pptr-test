@@ -5,21 +5,19 @@ import open from 'open';
 import Base from '../base';
 
 class Login extends Base {
-  async startLogin(isExpired?: boolean) {
+  async startLogin() {
     await this.page.goto('https://pc.xuexi.cn/points/my-points.html');
 
-    if (isExpired == null) {
-      isExpired = await this.page.evaluate(() => {
-        const href = window.location.href;
-        if (href.includes('points/login')) return true;
-        const tipBox = document.querySelectorAll('.ant-modal-confirm-title');
-        if (tipBox.length > 0) {
-          const tips = tipBox[0].textContent || '';
-          if (tips.includes('重新登录')) return true;
-        }
-        return false;
-      });
-    }
+    const isExpired = await this.page.evaluate(() => {
+      const href = window.location.href;
+      if (href.includes('points/login')) return true;
+      const tipBox = document.querySelectorAll('.ant-modal-confirm-title');
+      if (tipBox.length > 0) {
+        const tips = tipBox[0].textContent || '';
+        if (tips.includes('重新登录')) return true;
+      }
+      return false;
+    });
 
     if (isExpired) {
       await this.page.evaluate(() => {
@@ -49,7 +47,7 @@ class Login extends Base {
 
       const imgSrc = await frame!.evaluate(() => {
         const img = document.querySelectorAll(
-          '#app .login_qrcode_content img'
+          '#app .login_qrcode_content img',
         )[0] as HTMLImageElement;
         return img.src;
       });

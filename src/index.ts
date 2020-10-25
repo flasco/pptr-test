@@ -76,7 +76,7 @@ class App {
         break;
       }
       const result = await this.work.getWork();
-      if (result == null) return false;
+      if (result == null) return;
       const { article, video } = result;
       if (article.sum + article.time + video.sum + video.time < 1) {
         Logger.success('finish!');
@@ -88,19 +88,12 @@ class App {
       if (video.sum > 0 || video.time > 0) await this.videx.start(video);
       await this.ques.start();
     }
-    return true;
   }
 
   async start() {
     await this.init();
-    let isExpired = false;
-    for (;;) {
-      await this.login.startLogin(isExpired);
-      if (await this.workQueue()) break;
-      if (isExpired === true) break;
-      isExpired = true;
-      this.article.log('is expired!, tried again...');
-    }
+    await this.login.startLogin();
+    await this.workQueue();
 
     process.exit(0);
   }
