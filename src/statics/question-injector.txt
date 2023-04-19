@@ -1,0 +1,72 @@
+"use strict";
+function delay(ms) {
+    return new Promise((res)=>setTimeout(res, ms));
+}
+const getDomList = (query)=>{
+    const lists = document.querySelectorAll(query);
+    return Array.from(lists);
+};
+async function getTips() {
+    let tips = [
+        ...getDomList(".line-feed font[color=red]")
+    ];
+    if (tips.length < 1) {
+        var _getDomList_;
+        (_getDomList_ = getDomList(".q-footer span")[0]) === null || _getDomList_ === void 0 ? void 0 : _getDomList_.click();
+        await delay(4910);
+        tips = [
+            ...getDomList(".line-feed font[color=red]")
+        ];
+    }
+    const results = tips.map((i)=>i.textContent.trim());
+    return results;
+}
+async function autoAnswer() {
+    const results = await getTips();
+    const chooseResolver = async ()=>{
+        const chooses = [
+            ...getDomList(".question .q-answers .choosable")
+        ];
+        if (chooses.length > 0) {
+            for(let i = 0; i < chooses.length; i++){
+                const item = chooses[i];
+                const haveIt = results.some((key)=>item.textContent.includes(key));
+                const haveIt2 = results.some((key)=>key.includes(item.textContent));
+                if (haveIt || haveIt2) item.click();
+                await delay(1600);
+            }
+        }
+    };
+    const chooseMap = {
+        填空: async ()=>{
+            const inputs = [
+                ...getDomList(".q-body .blank")
+            ];
+            for(let i = 0; i < inputs.length; i++){
+                inputText2React(inputs[i], results[i]);
+                await delay(2500);
+            }
+        },
+        单选: chooseResolver,
+        多选: chooseResolver
+    };
+    const type = getDomList(".q-header")[0].textContent.split("题")[0];
+    const func = chooseMap[type];
+    if (func == null) throw new Error(`异常，不认识的题目！, ${type}`);
+    await func();
+    await delay(4210);
+    getDomList(".action-row button")[0].click();
+}
+function inputText2React(dom, str) {
+    const lastValue = dom.value;
+    dom.value = str;
+    const event = new Event("input", {
+        bubbles: true
+    });
+    // hack React16 内部定义了descriptor拦截value，此处重置状态
+    const tracker = dom._valueTracker;
+    if (tracker) {
+        tracker.setValue(lastValue);
+    }
+    dom.dispatchEvent(event);
+}

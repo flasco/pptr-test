@@ -1,8 +1,8 @@
-import { time as Logger } from '@flasco/logger';
 import { writeFileSync } from 'fs';
 import open from 'open';
 
 import Base from '../base';
+import { delay } from '@src/utils';
 
 class Login extends Base {
   async startLogin() {
@@ -29,8 +29,9 @@ class Login extends Base {
         }
       });
       await this.page.waitForSelector('#ddlogin-iframe');
+      await delay(3000);
       await this.page.evaluate(() => {
-        function striaightScroll(element: Element) {
+        function straightScroll(element: Element) {
           const rect = element.getBoundingClientRect();
           //获取元素相对窗口的top值，此处应加上窗口本身的偏移
           const top = window.pageYOffset + rect.top;
@@ -38,7 +39,7 @@ class Login extends Base {
           window.scrollTo(0, top);
         }
         const el = document.querySelectorAll('#ddlogin-iframe')[0];
-        if (el != null) striaightScroll(el);
+        if (el != null) straightScroll(el);
       });
 
       const frame = this.page
@@ -49,30 +50,34 @@ class Login extends Base {
         const img = document.querySelectorAll(
           '#app .login_qrcode_content img',
         )[0] as HTMLImageElement;
-        return img.src;
+        return img?.src;
       });
+
+      if (!imgSrc) {
+        throw new Error('登录二维码获取失败，请稍后重试。');
+      }
 
       writeFileSync('login.png', dataURLtoBlob(imgSrc));
 
       await open('login.png');
 
-      this.log('请扫描登录二维码');
+      this.logWithNotify('请扫描登录二维码');
       await this.page.waitForNavigation({ timeout: 0 });
     }
 
     const curUrl = await this.page.evaluate(() => location.href);
     if (curUrl.includes('xuexi.cn')) {
-      Logger.success('login succeed.');
+      console.log('login succeed.');
       if (isExpired) {
         await this.saveCookies();
-        Logger.success('save login state succeed');
+        console.log('save login state succeed');
       }
     }
   }
 }
 
-function dataURLtoBlob(dataurl: string) {
-  const base64Data = dataurl.replace(/^data:image\/\w+;base64,/, '');
+function dataURLtoBlob(dataURL: string) {
+  const base64Data = dataURL.replace(/^data:image\/\w+;base64,/, '');
   return Buffer.from(base64Data, 'base64');
 }
 

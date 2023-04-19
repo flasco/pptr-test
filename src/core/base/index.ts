@@ -1,8 +1,8 @@
 import notifier from 'node-notifier';
 import { Browser, Page } from 'puppeteer-core';
-import { time as Logger } from '@flasco/logger';
 
-import Cookie from '../../store/cookie';
+
+import Cookie from '@src/store/cookie';
 
 export interface IStartOpt {
   sum: number;
@@ -23,8 +23,8 @@ class Base {
     Cookie.setCookie(cookies);
   }
 
-  log(str: string) {
-    Logger.info(str);
+  logWithNotify(str: string) {
+    console.log(str);
 
     notifier.notify({
       title: 'LEARN',

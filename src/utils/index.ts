@@ -38,3 +38,8 @@ export function writeFileSync(filePath: string, content: any) {
 
 export const delay = (ms: number) =>
   new Promise(resolve => setTimeout(resolve, ms));
+
+  /** 期望值 = [0.75 * ms ~ 1.25 * ms] */
+export const getRandomWaitTime = (ms: number) => {
+  return (ms * Math.random()) / 2 + (ms / 4 * 3);
+};

@@ -1,14 +1,12 @@
-import formatDate from 'date-fns/format';
-import { time as Logger } from '@flasco/logger';
-
 import Base, { IStartOpt } from '../base';
-import ViStore from '../../store/videx';
-import { fetch20Vedios } from '../../api';
-import { delay } from '../../utils';
+import ViStore from '@src/store/videx';
+import { fetch20Videos } from '@src/api';
+import { delay } from '@src/utils';
+import dayjs from 'dayjs';
 
-class Videx extends Base {
-  sum: number = 0;
-  time: number = 0;
+class VideoWatcher extends Base {
+  sum = 0;
+  time = 0;
   watchArr: string[] = [];
   async start({ sum, time }: IStartOpt, isHotTime?: boolean) {
     if (isHotTime) {
@@ -20,21 +18,21 @@ class Videx extends Base {
     }
 
     if (this.sum < 1 && this.time < 1) return;
-    Logger.info(`需要查看 ${this.sum} 个视频，花费 ${this.time} 分钟.`);
+    console.log(`需要查看 ${this.sum} 个视频，花费 ${this.time} 分钟.`);
 
     this.watchArr = [];
 
-    await this.getVidexByNews();
+    await this.getVideoByNews();
 
     if (this.watchArr.length >= this.sum) {
-      Logger.info('已获取足够的视频link，开始watch...');
-      await this.watchVidex();
+      console.log('已获取足够的视频link，开始watch...');
+      await this.watchVideo();
     } else {
-      Logger.error('视频 link 不够...');
+      console.log('视频 link 不够...');
     }
   }
 
-  async watchVidex() {
+  async watchVideo() {
     for (let i = 0, j = this.watchArr.length; i < j; i++) {
       const current = this.watchArr[i];
       await this.page.goto(current);
@@ -42,16 +40,16 @@ class Videx extends Base {
       await this.page.waitForSelector('.duration');
 
       const haveVideo = await this.page.evaluate(
-        () => document.querySelectorAll('.prism-player').length > 0
+        () => document.querySelectorAll('.prism-player').length > 0,
       );
 
       if (!haveVideo) continue;
 
       await this.page.evaluate(() => {
         function animateScroll(element: Element, speed: number) {
-          let rect = element.getBoundingClientRect();
+          const rect = element.getBoundingClientRect();
           //获取元素相对窗口的top值，此处应加上窗口本身的偏移
-          let top = window.pageYOffset + rect.top;
+          const top = window.pageYOffset + rect.top;
           let currentTop = 0;
           let requestId: number;
           //采用requestAnimationFrame，平滑动画
@@ -88,7 +86,7 @@ class Videx extends Base {
         if (el.style.display === 'block') el.click();
       });
 
-      Logger.info(`第 ${i + 1} 个, druation - ${time}.`);
+      console.log(`第 ${i + 1} 个, druation - ${time}.`);
 
       const timeArr = time.split(':');
       let duration = 0;
@@ -104,8 +102,8 @@ class Videx extends Base {
     ViStore.save();
   }
 
-  async getVidexByNews() {
-    const list = await fetch20Vedios();
+  async getVideoByNews() {
+    const list = await fetch20Videos();
     const listx = list.map((item: any) => {
       return {
         id: item.itemId,
@@ -120,9 +118,9 @@ class Videx extends Base {
     if (lengthx > 0) {
       for (let i = 0, j = listx.length; i < j; i++) {
         const cur = listx[i];
-        if (!ViStore.hasVidexId(cur.id) && !cur.id.includes('新闻联播')) {
+        if (!ViStore.hasVideoId(cur.id) && !cur.id.includes('新闻联播')) {
           this.watchArr.push(cur.url);
-          ViStore.pushVidexId(cur.id);
+          ViStore.pushVideoId(cur.id);
           if (this.watchArr.length >= lengthx) break;
         }
       }
@@ -131,11 +129,12 @@ class Videx extends Base {
     if (needTime) {
       const xwlbLink =
         'https://www.xuexi.cn/8e35a343fca20ee32c79d67e35dfca90/7f9f27c65e84e71e1b7189b7132b4710.html';
-      const before = formatDate(Date.now() - 24 * 3600000 * 7, 'YYYY-MM-DD');
+
+      const before = dayjs().subtract(7, 'day').format('YYYY-MM-DD');
       const get7daysBefore = `${xwlbLink}?p1=${before}`;
       this.watchArr.push(get7daysBefore);
     }
   }
 }
 
-export default Videx;
+export default VideoWatcher;
