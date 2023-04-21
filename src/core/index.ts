@@ -77,7 +77,7 @@ export = class App {
       const { article, video, question } = result;
       /** 因为 read article 有 bug，有时候看了也算不进去，就不看重复了，否则可能被风控 */
       if (article.sum <= 1 && video.sum === 0 && question.sum === 0) {
-        this.article.logWithNotify('今日任务已经全部完成');
+        this.article.logWithNotify('today task all finished~ ヾ(*′○`)ﾟ.+:｡ﾟ☆');
         const currentScore = await getCurrentScore();
         const earnedScore = await getTodayEarnedScore();
 
