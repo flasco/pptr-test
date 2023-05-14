@@ -8,7 +8,11 @@ import Question from './question';
 import Cookie from '@src/store/cookie';
 
 import findChrome from '@src/utils/find-chrome';
-import { getTaskProgress, getCurrentScore, getTodayEarnedScore } from '@src/api';
+import {
+  getTaskProgress,
+  getCurrentScore,
+  getTodayEarnedScore,
+} from '@src/api';
 
 export = class App {
   login!: Login;
@@ -74,26 +78,23 @@ export = class App {
       }
       const result = await getTaskProgress();
       if (result == null) return;
-      const { article, video, question } = result;
+      const { article, video } = result;
       /** 因为 read article 有 bug，有时候看了也算不进去，就不看重复了，否则可能被风控 */
-      if (article.sum <= 1 && video.sum === 0 && question.sum === 0) {
+      if (article.sum <= 1 && video.sum === 0) {
         this.article.logWithNotify('today task all finished~ ヾ(*′○`)ﾟ.+:｡ﾟ☆');
         const currentScore = await getCurrentScore();
         const earnedScore = await getTodayEarnedScore();
 
-        console.log(`current score: ${currentScore}, today earned score：${earnedScore}`)
+        console.log(
+          `current score: ${currentScore}, today earned score：${earnedScore}`,
+        );
         break;
       }
 
-      if (article.sum > 0 || article.time > 0) {
-        await this.article.start(article);
-      }
-      if (video.sum > 0 || video.time > 0) {
-        await this.videoWatcher.start(video);
-      }
-      if (question.sum > 0) {
-        await this.question.start();
-      }
+      /** high risk, no use */
+      // await this.question.start(question);
+      await this.article.start(article);
+      await this.videoWatcher.start(video);
     }
   }
 

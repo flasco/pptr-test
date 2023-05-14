@@ -59,9 +59,10 @@ class Login extends Base {
 
       writeFileSync('login.png', dataURLtoBlob(imgSrc));
 
+      this.logWithNotify('请扫描登录二维码');
+
       await open('login.png');
 
-      this.logWithNotify('请扫描登录二维码');
       await this.page.waitForNavigation({ timeout: 0 });
     }
 

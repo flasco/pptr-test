@@ -33,11 +33,40 @@ export async function getWeekQuestion() {
   return JSON.parse(curData);
 }
 
+export const getSpecialExam = async () => {
+  let pageNo = 1;
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const url = `https://pc-proxy-api.xuexi.cn/api/exam/service/paper/pc/list?pageSize=50&pageNo=${pageNo}`;
+
+    const { data } = await axios.get(url);
+    const curData = JSON.parse(
+      Buffer.from(data.data_str, 'base64').toString('utf-8'),
+    );
+
+    const noAnsweredExam = curData.list.filter(i => i.tipScore === 0).pop();
+
+    if (noAnsweredExam) {
+      return noAnsweredExam;
+    }
+
+    if (pageNo < curData.totalPageCount) {
+      pageNo += 1;
+    } else {
+      console.log('无可供作答的专项，跳过。');
+      break;
+    }
+  }
+
+  return null;
+};
+
 enum TaskIds {
   readArticleTime = '193549965443299840',
   watchCount = '193551054368504064',
   watchTime = '193551711926319360',
   dailyQuestion = '193552647163836928',
+  specialQuestion = '193561952390838784',
 }
 
 const usedRules = Object.values(TaskIds) as string[];
@@ -92,6 +121,10 @@ export const getTaskProgress = async () => {
     item => item.displayRuleId === TaskIds.dailyQuestion,
   );
 
+  const specialQuestion = supportedTasks.find(
+    i => i.displayRuleId === TaskIds.specialQuestion,
+  );
+
   return {
     article: {
       sum: Math.round(needReadTime / 2),
@@ -102,7 +135,8 @@ export const getTaskProgress = async () => {
       time: needWatchTime,
     },
     question: {
-      sum: dailyQuestion.dayMaxScore - dailyQuestion.currentScore,
+      dailySum: dailyQuestion.dayMaxScore - dailyQuestion.currentScore,
+      specialSum: specialQuestion.dayMaxScore - specialQuestion.currentScore,
     },
   };
 };
