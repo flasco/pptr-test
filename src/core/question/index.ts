@@ -117,8 +117,8 @@ class Question extends Base {
     }
 
     if (specialSum > 0) {
-      await this.answerWeekly().catch(e => console.log(e));
-      await delay(7000);
+      // await this.answerWeekly().catch(e => console.log(e));
+      // await delay(7000);
       await this.answerSpecial().catch(e => console.log(e));
       await delay(7000);
     }

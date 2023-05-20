@@ -78,7 +78,7 @@ export = class App {
       }
       const result = await getTaskProgress();
       if (result == null) return;
-      const { article, video } = result;
+      const { article, video, question } = result;
       /** 因为 read article 有 bug，有时候看了也算不进去，就不看重复了，否则可能被风控 */
       if (article.sum <= 1 && video.sum === 0) {
         this.article.logWithNotify('today task all finished~ ヾ(*′○`)ﾟ.+:｡ﾟ☆');
@@ -92,7 +92,7 @@ export = class App {
       }
 
       /** high risk, no use */
-      // await this.question.start(question);
+      await this.question.start(question);
       await this.article.start(article);
       await this.videoWatcher.start(video);
     }
