@@ -92,9 +92,9 @@ export = class App {
       }
 
       /** high risk, no use */
-      await this.question.start(question);
       await this.article.start(article);
       await this.videoWatcher.start(video);
+      await this.question.start(question);
     }
   }
 

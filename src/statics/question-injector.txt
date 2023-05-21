@@ -1,7 +1,13 @@
 "use strict";
+
+function getRandomWaitTime(ms) {
+  return (ms * Math.random()) / 2 + (ms / 4 * 3);
+};
+
 function delay(ms) {
-    return new Promise((res)=>setTimeout(res, ms));
+    return new Promise(resolve => setTimeout(resolve, getRandomWaitTime(ms)));
 }
+
 const getDomList = (query)=>{
     const lists = document.querySelectorAll(query);
     return Array.from(lists);
@@ -33,7 +39,7 @@ async function autoAnswer() {
                 const haveIt = results.some((key)=>item.textContent.includes(key));
                 const haveIt2 = results.some((key)=>key.includes(item.textContent));
                 if (haveIt || haveIt2) item.click();
-                await delay(1600);
+                await delay(1200);
             }
         }
     };
@@ -54,8 +60,8 @@ async function autoAnswer() {
     const func = chooseMap[type];
     if (func == null) throw new Error(`异常，不认识的题目！, ${type}`);
     await func();
-    await delay(4210);
-    getDomList(".action-row button")[0].click();
+    await delay(3200);
+    getDomList(".action-row button").find(k => k.disabled === false || k.disabled === undefined)?.click();
 }
 function inputText2React(dom, str) {
     const lastValue = dom.value;

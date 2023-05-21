@@ -110,18 +110,18 @@ class Question extends Base {
   };
 
   async start(question: { dailySum: number; specialSum: number }) {
-    const { dailySum, specialSum } = question;
+    const { dailySum, /** specialSum */  } = question;
     if (dailySum > 0) {
       await this.answerDaily().catch(e => console.log(e));
       await delay(7000);
     }
 
-    if (specialSum > 0) {
-      // await this.answerWeekly().catch(e => console.log(e));
-      // await delay(7000);
-      await this.answerSpecial().catch(e => console.log(e));
-      await delay(7000);
-    }
+    // if (specialSum > 0) {
+    //   // await this.answerWeekly().catch(e => console.log(e));
+    //   // await delay(7000);
+    //   await this.answerSpecial().catch(e => console.log(e));
+    //   await delay(7000);
+    // }
   }
 }
 
