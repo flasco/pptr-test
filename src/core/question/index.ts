@@ -3,7 +3,6 @@ import path from 'path';
 import fs from 'fs';
 
 import { delay } from '@src/utils';
-import { getSpecialExam, getWeekQuestion } from '@src/api';
 
 declare const getDomList: any;
 declare const autoAnswer: () => Promise<void>;
@@ -14,33 +13,6 @@ class Question extends Base {
       path.resolve(__dirname, '../../statics/question-injector.txt'),
     )
     .toString('utf-8');
-
-  findWeekQuestions = async () => {
-    const { list } = await getWeekQuestion();
-    const curList: any[] = [];
-    list.forEach(({ practices }: any) => {
-      curList.push(...practices);
-    });
-
-    // https://pc.xuexi.cn/points/exam-weekly-detail.html?id=68
-    const item = curList.find((i: any) => i.tipScore === 0);
-    if (item == null) {
-      console.log('所有题目均已答完');
-      return '';
-    }
-
-    return `https://pc.xuexi.cn/points/exam-weekly-detail.html?id=${item.id}`;
-  };
-
-  findSpecialQuestions = async () => {
-    const item = await getSpecialExam();
-
-    if (item == null) {
-      return '';
-    }
-
-    return `https://pc.xuexi.cn/points/exam-paper-detail.html?id=${item.id}`;
-  };
 
   getCurrentQuesProgress = async () => {
     return await this.page.evaluate(() => {
@@ -75,30 +47,6 @@ class Question extends Base {
     console.log('完成答题，得分：', points);
   };
 
-  answerWeekly = async () => {
-    console.log('weekly answer.');
-    const url = await this.findWeekQuestions();
-    if (url.length < 1) return;
-    await this.page.goto(url);
-
-    await this.page.addScriptTag({ content: this.content });
-
-    await delay(3000);
-    await this.autoAnswer();
-  };
-
-  answerSpecial = async () => {
-    console.log('special answer.');
-    const url = await this.findSpecialQuestions();
-    if (url.length < 1) return;
-    await this.page.goto(url);
-
-    await this.page.addScriptTag({ content: this.content });
-
-    await delay(3000);
-    await this.autoAnswer();
-  };
-
   answerDaily = async () => {
     console.log('daily answer.');
     await this.page.goto('https://pc.xuexi.cn/points/exam-practice.html');
@@ -109,19 +57,11 @@ class Question extends Base {
     await this.autoAnswer();
   };
 
-  async start(question: { dailySum: number; specialSum: number }) {
-    const { dailySum, /** specialSum */  } = question;
+  async start(question: { dailySum: number }) {
+    const { dailySum } = question;
     if (dailySum > 0) {
       await this.answerDaily().catch(e => console.log(e));
-      await delay(7000);
     }
-
-    // if (specialSum > 0) {
-    //   // await this.answerWeekly().catch(e => console.log(e));
-    //   // await delay(7000);
-    //   await this.answerSpecial().catch(e => console.log(e));
-    //   await delay(7000);
-    // }
   }
 }
 

@@ -71,6 +71,7 @@ export = class App {
   }
 
   async workQueue() {
+    let answerOnce = 0;
     for (let triedCnt = 0; ; triedCnt++) {
       if (triedCnt > 3) {
         this.article.logWithNotify('失败重试太多次啦，退出！');
@@ -94,7 +95,10 @@ export = class App {
       /** high risk, no use */
       await this.article.start(article);
       await this.videoWatcher.start(video);
-      await this.question.start(question);
+      if (!answerOnce) {
+        await this.question.start(question);
+        answerOnce = 1;
+      }
     }
   }
 
